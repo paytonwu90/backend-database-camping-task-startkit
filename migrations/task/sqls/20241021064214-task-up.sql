@@ -288,6 +288,21 @@ GROUP BY user_id;
     -- inner join ( 用戶王小明的已使用堂數) as "COURSE_BOOKING"
     -- on "COURSE_BOOKING".user_id = "CREDIT_PURCHASE".user_id;
 
+-- 剩餘堂數 = 購買堂數 - 已使用堂數
+SELECT 
+  user_id,
+  SUM(purchased_credits) -
+  -- 已使用堂數
+  (
+    SELECT COUNT(*)
+    FROM "COURSE_BOOKING"
+    WHERE user_id = (SELECT id FROM "USER" WHERE email = 'wXlTq@hexschooltest.io')
+      AND status <> '課程已取消'
+  ) AS remaining_credit
+FROM "CREDIT_PURCHASE"
+WHERE user_id = (SELECT id FROM "USER" WHERE email = 'wXlTq@hexschooltest.io')
+GROUP BY user_id;
+
 
 -- ████████  █████   █     ███  
 --   █ █   ██    █  █     █     
