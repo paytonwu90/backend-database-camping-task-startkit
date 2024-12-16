@@ -261,7 +261,7 @@ SET join_at = '2024-11-25 14:01:59',
   status = '上課中'
 WHERE user_id = (SELECT id FROM "USER" WHERE email = 'wXlTq@hexschooltest.io')
   AND course_id = (SELECT id FROM "COURSE" WHERE user_id = (SELECT id FROM "USER" WHERE email = 'lee2000@hexschooltest.io'))
-  AND status <> '課程已取消';
+  AND status != '課程已取消';
 
 -- 5-6. 查詢：計算用戶王小明的購買堂數，顯示須包含以下欄位： user_id , total。 (需使用到 SUM 函式與 Group By)
 
@@ -278,7 +278,7 @@ SELECT
   COUNT(*) AS total
 FROM "COURSE_BOOKING"
 WHERE user_id = (SELECT id FROM "USER" WHERE email = 'wXlTq@hexschooltest.io')
-  AND status <> '課程已取消'
+  AND status != '課程已取消'
 GROUP BY user_id;
 
 -- 5-8. [挑戰題] 查詢：請在一次查詢中，計算用戶王小明的剩餘可用堂數，顯示須包含以下欄位： user_id , remaining_credit
@@ -297,7 +297,7 @@ SELECT
     SELECT COUNT(*)
     FROM "COURSE_BOOKING"
     WHERE user_id = (SELECT id FROM "USER" WHERE email = 'wXlTq@hexschooltest.io')
-      AND status <> '課程已取消'
+      AND status != '課程已取消'
   ) AS remaining_credit
 FROM "CREDIT_PURCHASE"
 WHERE user_id = (SELECT id FROM "USER" WHERE email = 'wXlTq@hexschooltest.io')
@@ -345,7 +345,7 @@ SELECT
   SUM("CREDIT_PURCHASE".purchased_credits) AS 銷售數量
 FROM "CREDIT_PURCHASE"
 INNER JOIN "CREDIT_PACKAGE" ON "CREDIT_PACKAGE".id = "CREDIT_PURCHASE".credit_package_id
-WHERE purchase_at BETWEEN '2024/12/01' AND '2024/12/31'
+WHERE purchase_at BETWEEN '2024/12/01 00:00:00' AND '2024/12/31 23:59:59'
 GROUP BY "CREDIT_PACKAGE".name;
 
 -- 6-4. 查詢：計算 11 月份總營收（使用 purchase_at 欄位統計）
@@ -363,4 +363,4 @@ SELECT
   COUNT(DISTINCT user_id) AS 預約會員人數
 FROM "COURSE_BOOKING"
 WHERE created_at BETWEEN '2024/12/01' AND '2024/12/31'
-  AND status <> '課程已取消';
+  AND status != '課程已取消';
